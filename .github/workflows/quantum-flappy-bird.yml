@@ -1,0 +1,29 @@
+name: Build and Run Quantum Flappy Bird AI
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  pull-build-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Pull NVIDIA CUDA Quantum Image
+        run: docker pull nvcr.io/nvidia/quantum/cuda-quantum:0.8.0
+
+      - name: Build Docker image
+        run: docker build -t quantum-flappy-bird .
+
+      # Uncomment the following step to run the container automatically after building it.
+      # Note: GPU support may not be available in GitHub-hosted runners, so this is better suited for local environments.
+      # - name: Run Docker container
+      #   run: docker run --gpus all quantum-flappy-bird
