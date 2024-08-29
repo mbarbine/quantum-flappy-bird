@@ -22,6 +22,8 @@ RUN apt-get update && \
     python3-tk \
     wget \
     bzip2 \
+    libfreetype6-dev \
+    pkg-config \
     bash \
     && rm -rf /var/lib/apt/lists/*
 
@@ -38,10 +40,10 @@ ENV SHELL=/bin/bash
 # Create a new Conda environment with Python 3.10 and pip
 RUN /bin/bash -c "source /opt/conda/etc/profile.d/conda.sh && conda create -y -n cuda-quantum python=3.10 pip"
 
-# Install CUDA and MPI-related packages
+# Install CUDA, MPI-related packages, and visualization tools
 RUN /bin/bash -c "source /opt/conda/etc/profile.d/conda.sh && \
     conda install -y -n cuda-quantum -c 'nvidia/label/cuda-11.8.0' cuda && \
-    conda install -y -n cuda-quantum -c conda-forge mpi4py openmpi cxx-compiler"
+    conda install -y -n cuda-quantum -c conda-forge mpi4py openmpi cxx-compiler matplotlib"
 
 # Set environment variables for the Conda environment
 RUN /bin/bash -c "source /opt/conda/etc/profile.d/conda.sh && \

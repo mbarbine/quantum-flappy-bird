@@ -1,8 +1,7 @@
-# quantum_flappy_bird_advanced.py
-
 import cudaq
 import pygame
 import sys
+from quantum_visualization import visualize_state, visualize_circuit
 
 class QuantumFlappyBirdAdvanced:
     def __init__(self):
@@ -20,6 +19,11 @@ class QuantumFlappyBirdAdvanced:
     def quantum_kernel(self):
         qubit = self.kernel.qalloc()
         self.kernel.h(qubit)
+        
+        # Visualize the quantum circuit and state before measurement
+        visualize_circuit(self.kernel)
+        visualize_state(self.kernel)
+
         result = self.kernel.measure(qubit)
         self.kernel.c_if(result, lambda: self.flap())
 
