@@ -1,0 +1,36 @@
+name: Build and Run Quantum Flappy Bird with CUDA Quantum
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Pull NVIDIA CUDA Quantum Image
+        run: docker pull nvcr.io/nvidia/quantum/cuda-quantum:0.8.0
+
+      - name: Build Docker image
+        run: docker build -t quantum-flappy-bird .
+
+      - name: Run Docker container (if GPU support is available)
+        run: |
+          if command -v nvidia-smi &> /dev/null; then
+            docker run --gpus all quantum-flappy-bird
+          else
+            echo "No GPU found. Skipping container run."
+          fi
+
+      - name: Post-run cleanup
+        if: always()
+        run: docker system prune -f
