@@ -1,4 +1,4 @@
-name: Build and Run Quantum Flappy Bird AI
+name: Build and Run Quantum Flappy Bird
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:  # Allows manual triggering
 
 jobs:
-  pull-build-run:
+  pull-build:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,7 +23,36 @@ jobs:
       - name: Build Docker image
         run: docker build -t quantum-flappy-bird .
 
-      # Uncomment the following step to run the container automatically after building it.
-      # Note: GPU support may not be available in GitHub-hosted runners, so this is better suited for local environments.
-      # - name: Run Docker container
-      #   run: docker run --gpus all quantum-flappy-bird
+      - name: Save Docker image as an artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: quantum-flappy-bird-image
+          path: |
+            ./Dockerfile
+            ./quantum-flappy-bird
+
+  run-container:
+    needs: pull-build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Download Docker image artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: quantum-flappy-bird-image
+          path: ./quantum-flappy-bird
+
+      - name: Load Docker image
+        run: docker load -i quantum-flappy-bird-image
+
+      - name: Run Docker container (if GPU support is available)
+        run: |
+          if command -v nvidia-smi &> /dev/null; then
+            docker run --gpus all quantum-flappy-bird
+          else
+            echo "No GPU found. Skipping container run."
+          fi
+
+      - name: Post-run cleanup
+        if: always()
+        run: docker system prune -f
