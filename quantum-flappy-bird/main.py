@@ -4,9 +4,8 @@ from quantum_multiplayer import QuantumMultiplayerFlappyBird
 from quantum_weather import QuantumFlappyBirdWithWeather
 from quantum_rewards import QuantumFlappyBirdWithRewards
 from quantum_powerups import QuantumFlappyBirdWithPowerUps
-import cudaq
-import pygame
-import sys
+from quantum_flappy_bird_advanced import QuantumFlappyBirdAdvanced
+
 
 class QuantumFlappyBirdAdvanced:
     def __init__(self):
