@@ -1,0 +1,28 @@
+name: Daily Docker Build
+
+on:
+  schedule:
+    # Schedule the workflow to run daily at 00:00 UTC
+    - cron: '0 0 * * *'
+
+  # Allows you to manually trigger the workflow in the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker image
+        run: docker build -t quantum-flappy-bird .
+
+      # Optional: Remove local images to free up space on the GitHub runner
+      - name: Clean up Docker images
+        run: |
+          docker rmi quantum-flappy-bird:latest || true
