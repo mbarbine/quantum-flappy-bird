@@ -105,16 +105,12 @@ class QuantumFlappyBirdAdvanced:
             pygame.draw.rect(self.window, (0, 0, 0), [self.bird_x, self.bird_y, self.bird_size, self.bird_size])
             pygame.display.update()
             self.clock.tick(30)
-
 def main():
-    # Choose the game mode
-    # Uncomment the mode you want to play
-
     # Basic Quantum Flappy Bird
     # game = QuantumFlappyBird()
 
     # Quantum Flappy Bird with AI opponent
-    # game = QuantumFlappyBirdAI()
+    game = QuantumFlappyBirdAI()
 
     # Quantum Flappy Bird with Multiplayer mode
     # game = QuantumMultiplayerFlappyBird(num_players=2)
@@ -129,7 +125,7 @@ def main():
     # game = QuantumFlappyBirdWithPowerUps()
 
     # Advanced Quantum Flappy Bird with Entanglement, Teleportation, and more
-    game = QuantumFlappyBirdAdvanced()
+    # game = QuantumFlappyBirdAdvanced()
 
     # Run the selected game mode
     game.game_loop()
