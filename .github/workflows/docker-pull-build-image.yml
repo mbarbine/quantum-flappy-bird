@@ -1,4 +1,4 @@
-name: Pull, Build, and Run Quantum Flappy Bird
+name: Build and Run Quantum Flappy Bird with CUDA Quantum
 
 on:
   push:
@@ -7,9 +7,8 @@ on:
   workflow_dispatch:  # Allows manual triggering
 
 jobs:
-  pull-and-build:
+  build-and-run:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -17,15 +16,49 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Log in to NVIDIA Container Registry
-        run: echo ${{ secrets.NVCR_TOKEN }} | docker login nvcr.io -u ${{ secrets.NVCR_USERNAME }} --password-stdin
-
       - name: Pull NVIDIA CUDA Quantum Image
         run: docker pull nvcr.io/nvidia/quantum/cuda-quantum:0.8.0
 
       - name: Build Docker image
         run: docker build -t quantum-flappy-bird .
 
-      # Uncomment the following step to run the container automatically after building it.
-      # - name: Run Docker container
-      #   run: docker run --gpus all quantum-flappy-bird
+      - name: Install CUDA Quantum dependencies
+        run: |
+          docker run --name cudaq-env -d nvcr.io/nvidia/quantum/cuda-quantum:0.8.0 sleep infinity
+          docker exec cudaq-env bash -c "conda run -n cuda-quantum pip install cuda-quantum pygame numpy"
+          docker commit cudaq-env quantum-flappy-bird-with-cudaq
+          docker stop cudaq-env && docker rm cudaq-env
+
+      - name: Save Docker image as an artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: quantum-flappy-bird-image
+          path: |
+            ./Dockerfile
+            ./quantum-flappy-bird
+
+  run-container:
+    needs: build-and-run
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    steps:
+      - name: Download Docker image artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: quantum-flappy-bird-image
+          path: ./quantum-flappy-bird
+
+      - name: Load Docker image
+        run: docker load -i quantum-flappy-bird-image
+
+      - name: Run Docker container (if GPU support is available)
+        run: |
+          if command -v nvidia-smi &> /dev/null; then
+            docker run --gpus all quantum-flappy-bird-with-cudaq
+          else
+            echo "No GPU found. Skipping container run."
+          fi
+
+      - name: Post-run cleanup
+        if: always()
+        run: docker system prune -f
