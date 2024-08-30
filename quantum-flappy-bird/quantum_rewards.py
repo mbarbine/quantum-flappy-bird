@@ -1,4 +1,15 @@
 import cudaq
+class QuantumRewards:
+    def __init__(self):
+        self.score = 0
+    
+    def update(self, bird):
+        self.score += 1
+    
+    def draw(self, screen):
+        font = pygame.font.Font(None, 36)
+        score_text = font.render(f"Score: {self.score}", True, (0, 0, 0))
+        screen.blit(score_text, (10, 10))
 
 class QuantumReward:
     def __init__(self):

@@ -4,6 +4,12 @@ from quantum_multiplayer import QuantumMultiplayerFlappyBird
 from quantum_weather import QuantumFlappyBirdWithWeather
 from quantum_rewards import QuantumFlappyBirdWithRewards
 from quantum_powerups import QuantumFlappyBirdWithPowerUps
+from quantum_flappy_bird_advanced import QuantumBirdAdvanced
+from quantum_obstacles import QuantumObstacles
+from quantum_rewards import QuantumRewards
+from quantum_powerups import QuantumPowerups
+from quantum_weather import QuantumWeather
+from quantum_multiplayer import module as multiplayer
 import cudaq
 import pygame
 import sys
@@ -105,6 +111,88 @@ class QuantumFlappyBirdAdvanced:
             pygame.draw.rect(self.window, (0, 0, 0), [self.bird_x, self.bird_y, self.bird_size, self.bird_size])
             pygame.display.update()
             self.clock.tick(30)
+
+def run_quantum_flappy_bird():
+    # Initialize game components
+    bird = QuantumBird()
+    obstacles = QuantumObstacles()
+    rewards = QuantumRewards()
+    powerups = QuantumPowerups()
+    weather = QuantumWeather()
+
+    # Pygame setup
+    pygame.init()
+    screen = pygame.display.set_mode((400, 600))
+    clock = pygame.time.Clock()
+    running = True
+er import QuantumMultiplayer
+
+def run_quantum_flappy_bird():
+    # Initialize game components
+    bird = QuantumBirdAdvanced()
+    obstacles = QuantumObstacles()
+    rewards = QuantumRewards()
+    powerups = QuantumPowerups()
+    weather = QuantumWeather()
+    multiplayer = QuantumMultiplayer()
+
+    # Pygame setup
+    pygame.init()
+    screen = pygame.display.set_mode((400, 600))
+    clock = pygame.time.Clock()
+    running = True
+
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+        
+        # Update game components
+        bird.update()
+        obstacles.update()
+        rewards.update(bird)
+        powerups.update(bird)
+        weather.update(bird)
+        multiplayer.update()
+
+        # Draw game components
+        screen.fill((255, 255, 255))
+        bird.draw(screen)
+        obstacles.draw(screen)
+        rewards.draw(screen)
+        powerups.draw(screen)
+        weather.draw(screen)
+        multiplayer.draw(screen)
+
+        pygame.display.flip()
+        clock.tick(30)
+
+    pygame.quit()
+
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+        
+        # Update game components
+        bird.update()
+        obstacles.update()
+        rewards.update(bird)
+        powerups.update(bird)
+        weather.update(bird)
+
+        # Draw game components
+        screen.fill((255, 255, 255))
+        bird.draw(screen)
+        obstacles.draw(screen)
+        rewards.draw(screen)
+        powerups.draw(screen)
+        weather.draw(screen)
+
+        pygame.display.flip()
+        clock.tick(30)
+
+    pygame.quit()
 
 def main():
     # Choose the game mode

@@ -1,5 +1,21 @@
 import cudaq
 from quantum_flappy_bird import QuantumFlappyBird
+import pygame
+
+class QuantumPowerups:
+    def __init__(self):
+        self.powerups = [{'x': 400, 'y': 300}]
+    
+    def update(self, bird):
+        for powerup in self.powerups:
+            powerup['x'] -= 5
+            if bird.y - 20 < powerup['y'] < bird.y + 20 and 180 < powerup['x'] < 220:
+                bird.flap_strength -= 5  # Example: increase flap strength
+                self.powerups.remove(powerup)
+    
+    def draw(self, screen):
+        for powerup in self.powerups:
+            pygame.draw.circle(screen, (0, 255, 0), (powerup['x'], powerup['y']), 10)
 
 class QuantumPowerUp:
     def __init__(self):
@@ -40,3 +56,30 @@ class QuantumFlappyBirdWithPowerUps(QuantumFlappyBird):
             pygame.draw.rect(self.window, (0, 0, 0), [self.bird_x, self.bird_y, self.bird_size, self.bird_size])
             pygame.display.update()
             self.clock.tick(30)
+import pygame
+import cudaq
+
+class QuantumPowerups:
+    def __init__(self):
+        self.powerups = [{'x': 400, 'y': 300, 'type': 'strength'}]
+    
+    def update(self, bird):
+        for powerup in self.powerups:
+            powerup['x'] -= 5
+            if bird.y - 20 < powerup['y'] < bird.y + 20 and 180 < powerup['x'] < 220:
+                self.apply_powerup(bird, powerup)
+                self.powerups.remove(powerup)
+    
+    def apply_powerup(self, bird, powerup):
+        if powerup['type'] == 'strength':
+            bird.flap_strength -= 5  # Increase flap strength
+        elif powerup['type'] == 'stabilize':
+            bird.gravity = 0.2  # Reduce gravity effect temporarily
+        elif powerup['type'] == 'bloch':
+            bird.bloch_vector = [1, 0, 0]  # Reset Bloch vector to |0> state
+        # Add more power-up types as needed
+    
+    def draw(self, screen):
+        for powerup in self.powerups:
+            color = (0, 255, 0) if powerup['type'] == 'strength' else (0, 0, 255)
+            pygame.draw.circle(screen, color, (powerup['x'], powerup['y']), 10)

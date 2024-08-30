@@ -1,6 +1,20 @@
 import cudaq
 from quantum_flappy_bird import QuantumFlappyBird
+import pygame
+import numpy as np
 
+class QuantumWeather:
+    def __init__(self):
+        self.wind = 0
+    
+    def update(self, bird):
+        self.wind = np.random.uniform(-1, 1)
+        bird.velocity += self.wind
+    
+    def draw(self, screen):
+        font = pygame.font.Font(None, 36)
+        wind_text = font.render(f"Wind: {self.wind:.2f}", True, (0, 0, 0))
+        screen.blit(wind_text, (10, 50))
 class QuantumWeather:
     def __init__(self):
         self.weather_state = cudaq.qubit()
@@ -16,6 +30,15 @@ class QuantumWeather:
         if weather_effect == 1:
             bird_y += 20
         return bird_y
+    
+    def update(self, bird):
+        self.wind = np.random.uniform(-1, 1) * bird.bloch_vector[2]  # Wind depends on Z component of Bloch vector
+        bird.velocity += self.wind
+    
+    def draw(self, screen):
+        font = pygame.font.Font(None, 36)
+        wind_text = font.render(f"Wind: {self.wind:.2f}", True, (0, 0, 0))
+        screen.blit(wind_text, (10, 50))
 
 class QuantumFlappyBirdWithWeather(QuantumFlappyBird):
     def __init__(self):
