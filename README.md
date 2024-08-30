@@ -1,6 +1,4 @@
-Certainly! Below is the entire `README.md` file, formatted and ready to be included in your project:
 
-```markdown
 # Quantum Flappy Bird 🐦⚛️
 
 Welcome to Quantum Flappy Bird—an innovative twist on the classic Flappy Bird game, infused with quantum computing principles. This project combines quantum mechanics with interactive gameplay to create a unique experience where players can explore quantum concepts through play.
