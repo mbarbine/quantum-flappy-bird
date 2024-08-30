@@ -509,7 +509,7 @@ Acknowledgments
 - NVIDIA CUDA Quantum Team: For providing the tools that made this project possible.
 - Pygame Community: For the excellent game development resources.
 
-This version of the README includes all the sections, content, and details you requested, with full integration of CUDA Quantum and relevant examples. Let me know if there's anything more you'd like to add or refine!
+
 ## Frequently Asked Questions
 
 ### Q: Can I play Quantum Flappy Bird on my mobile device?
